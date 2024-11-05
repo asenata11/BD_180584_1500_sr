@@ -1,0 +1,195 @@
+mysql> CREATE TABLE postac (
+    -> idpostaci int AUTO_INCREMENT PRIMARY KEY,
+    -> nazwa VARCHAR(40),
+    -> rodzaj enum('wiking' , 'ptak', 'kobieta'),
+    -> data_urodzenia_rok_miesiac_dzien  DATA NOT NULL,
+    -> wiek tinyint unsigned NOT NULL );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DATA NOT NULL,
+wiek tinyint unsigned NOT NULL )' at line 5
+mysql> CREATE TABLE postac ( idpostaci int AUTO_INCREMENT PRIMARY KEY, nazwa VARCHAR(40), rodzaj enum('wiking' , 'ptak', 'kobieta'), data_urodzenia_rok_miesiac_dzien  DATA NOT NULL, wiek tinyint UNSIGNED  NOT NULL );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DATA NOT NULL, wiek tinyint UNSIGNED  NOT NULL )' at line 1
+mysql> CREATE TABLE postac ( idpostaci int AUTO_INCREMENT PRIMARY KEY, nazwa VARCHAR(40), rodzaj enum('wiking' , 'ptak', 'kobieta'), data_urodzenia  int, wiek tinyint UNSIGNED  );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO postac VALUES ('Bjorn','wiking', '1960_12_01', 64),
+    -> ('Drozd', 'ptak', '2000_03_21', 24),
+    -> ('Tesciowa', 'kobieta', '1940_08_12', 84);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO postac VALUES (1,'Bjorn','wiking', '19601201', 64),  (2,'Drozd', 'ptak', '20000321', 24), (3,'Tesciowa', 'kobieta', '19400812', 84);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM postac
+    -> ;
++-----------+----------+---------+----------------+------+
+| idpostaci | nazwa    | rodzaj  | data_urodzenia | wiek |
++-----------+----------+---------+----------------+------+
+|         1 | Bjorn    | wiking  |       19601201 |   64 |
+|         2 | Drozd    | ptak    |       20000321 |   24 |
+|         3 | Tesciowa | kobieta |       19400812 |   84 |
++-----------+----------+---------+----------------+------+
+3 rows in set (0.00 sec)
+
+mysql> UPDATE postac SET data_urodzenia=19380812, wiek=88 WHERE idpostaci=3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM postac
+    -> ;
++-----------+----------+---------+----------------+------+
+| idpostaci | nazwa    | rodzaj  | data_urodzenia | wiek |
++-----------+----------+---------+----------------+------+
+|         1 | Bjorn    | wiking  |       19601201 |   64 |
+|         2 | Drozd    | ptak    |       20000321 |   24 |
+|         3 | Tesciowa | kobieta |       19380812 |   88 |
++-----------+----------+---------+----------------+------+
+3 rows in set (0.00 sec)
+
+
+CREATE TABLE walizka (
+idwalizki int AUTO_INCREMENT,
+pojemnosc tinyint UNSIGNED,
+kolor ENUM('rozowy','czerwony', 'teczowy', 'zolty') DEFAULT ('rozowy'),
+idwlasciciela int, 
+PRIMARY KEY(idwalizki),
+FOREIGN KEY(idwlasciciela) REFERENCES postac(idpostaci) on delete cascade);
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FOREIGN KEY REFERENCES postac(idpostaci))' at line 5
+mysql> CREATE TABLE walizka ( idwalizki int AUTO_INCREMENT PRIMARY KEY, pojemnosc tinyint UNSIGNED, kolor ENUM('rozowy','czerwony', 'teczowy', 'zolty'), id_wlasciciela int FOREIGN KEY REFERENCES postac);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FOREIGN KEY REFERENCES postac)' at line 1
+mysql> CREATE TABLE walizka ( idwalizki int AUTO_INCREMENT PRIMARY KEY, pojemnosc tinyint UNSIGNED, kolor ENUM('rozowy','czerwony', 'teczowy', 'zolty'), id_wlasciciela int FOREIGN KEY REFERENCES postac)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FOREIGN KEY REFERENCES postac)' at line 1
+mysql> CREATE TABLE walizka ( idwalizki int AUTO_INCREMENT PRIMARY KEY, pojemnosc tinyint UNSIGNED, kolor ENUM('rozowy','czerwony', 'teczowy', 'zolty'), id_wlasciciela int FOREIGN KEY);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FOREIGN KEY)' at line 1
+mysql> CREATE TABLE walizka ( idwalizki int AUTO_INCREMENT PRIMARY KEY, pojemnosc tinyint UNSIGNED, kolor ENUM('rozowy','czerwony', 'teczowy', 'zolty'));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> ALTER TABLE walizka ADD FOREIGN KEY (idpostaci)  REFERENCES postac (idpostaci);
+ERROR 1072 (42000): Key column 'idpostaci' doesn't exist in table
+mysql> SHOW TABLE postac
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'postac' at line 1
+mysql> SHOW TABLES;
++---------------------+
+| Tables_in_darzinowa |
++---------------------+
+| postac              |
+| walizka             |
++---------------------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT * FROM walizka
+    -> ;
+Empty set (0.00 sec)
+
+mysql> ALTER TABLE walizka ADD FOREIGN KEY (postac) REFERENCES postac (idpostaci);
+ERROR 1072 (42000): Key column 'postac' doesn't exist in table
+mysql> ALTER TABLE walizka ADD FOREIGN KEY (idpostaci) REFERENCES postac (idpostaci);
+ERROR 1072 (42000): Key column 'idpostaci' doesn't exist in table
+mysql> ALTER TABLE walizka ADD FOREIGN KEY (idwalizki) REFERENCES postac (idpostaci);
+Query OK, 0 rows affected (0.11 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc walizka;
++-----------+---------------------------------------------+------+-----+---------+----------------+
+| Field     | Type                                        | Null | Key | Default | Extra          |
++-----------+---------------------------------------------+------+-----+---------+----------------+
+| idwalizki | int                                         | NO   | PRI | NULL    | auto_increment |
+| pojemnosc | tinyint unsigned                            | YES  |     | NULL    |                |
+| kolor     | enum('rozowy','czerwony','teczowy','zolty') | YES  |     | NULL    |                |
++-----------+---------------------------------------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> desc postac
+    -> ;
++----------------+---------------------------------+------+-----+---------+----------------+
+| Field          | Type                            | Null | Key | Default | Extra          |
++----------------+---------------------------------+------+-----+---------+----------------+
+| idpostaci      | int                             | NO   | PRI | NULL    | auto_increment |
+| nazwa          | varchar(40)                     | YES  |     | NULL    |                |
+| rodzaj         | enum('wiking','ptak','kobieta') | YES  |     | NULL    |                |
+| data_urodzenia | int                             | YES  |     | NULL    |                |
+| wiek           | tinyint unsigned                | YES  |     | NULL    |                |
++----------------+---------------------------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+mysql> CREATE TABLE walizka (
+    -> idwalizki int AUTO_INCREMENT,
+    -> pojemnosc tinyint UNSIGNED,
+    -> kolor ENUM('rozowy','czerwony', 'teczowy', 'zolty') DEFAULT ('rozowy'),
+    -> idwlasciciela int,
+    -> PRIMARY KEY(idwalizki),
+    -> FOREIGN KEY(idwlasciciela) REFERENCES postac(idpostaci) on delete cascade);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> desc walizka
+    -> ;
++---------------+---------------------------------------------+------+-----+-------------------+-------------------+
+| Field         | Type                                        | Null | Key | Default           | Extra             |
++---------------+---------------------------------------------+------+-----+-------------------+-------------------+
+| idwalizki     | int                                         | NO   | PRI | NULL              | auto_increment    |
+| pojemnosc     | tinyint unsigned                            | YES  |     | NULL              |                   |
+| kolor         | enum('rozowy','czerwony','teczowy','zolty') | YES  |     | _latin1\'rozowy\' | DEFAULT_GENERATED |
+| idwlasciciela | int                                         | YES  | MUL | NULL              |                   |
++---------------+---------------------------------------------+------+-----+-------------------+-------------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO walizka VALUES (1,2,'teczowy',1), (2,7,'czerwony',2);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM walizka
+    -> ;
++-----------+-----------+----------+---------------+
+| idwalizki | pojemnosc | kolor    | idwlasciciela |
++-----------+-----------+----------+---------------+
+|         1 |         2 | teczowy  |             1 |
+|         2 |         7 | czerwony |             2 |
++-----------+-----------+----------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> UPDATE walizka SET idwalizki=3 WHERE pojemnosc=7;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM walizka
+    -> ;
++-----------+-----------+----------+---------------+
+| idwalizki | pojemnosc | kolor    | idwlasciciela |
++-----------+-----------+----------+---------------+
+|         1 |         2 | teczowy  |             1 |
+|         3 |         7 | czerwony |             2 |
++-----------+-----------+----------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> UPDATE walizka SET idwlasciciela=3 WHERE kolor='czerwony';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM walizka
+    -> ;
++-----------+-----------+----------+---------------+
+| idwalizki | pojemnosc | kolor    | idwlasciciela |
++-----------+-----------+----------+---------------+
+|         1 |         2 | teczowy  |             1 |
+|         3 |         7 | czerwony |             3 |
++-----------+-----------+----------+---------------+
+2 rows in set (0.00 sec)
+
+ZADANIE #
+
+CREATE TABLE izba (
+adres_budynku VARCHAR(50),
+nazwa_izby VARCHAR(80),
+metraz tinyint UNSIGNED,
+wlasciciel VARCHAR(50),
+PRIMARY KEY(adres_budynku,nazwa_izby),
+FOREIGN KEY (wlasciciel) REFERENCES postac(idpostaci));
+
+ALTER TABLE izba ADD COLUMN kolor_izby VARCHAR(70)  DEFAULT ('czarny') AFTER metraz;
+
+mysql> INSERT INTO izba VALUES ('lesna12/2','spizarnia',200,'czerwony','niedzwiedz');
+Query OK, 1 row affected (0.00 sec)
+
+
+
