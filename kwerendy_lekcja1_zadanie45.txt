@@ -1,0 +1,83 @@
+ZADANIE 4
+
+mysql> CREATE TABLE przetwory (
+    -> id_przetworu int AUTO_INCREMENT,
+    -> rok_produkcji SMALLINT DEFAULT(1654),
+    -> id_wykonawcy int AUTO_INCREMENT,
+    -> zawartosc VARCHAR(70),
+    -> dodatek VARCHAR(35) DEFAULT ('papryczka_chilli'),
+    -> id_konsumenta int AUTO_INCREMENT,
+    -> PRIMARY KEY (id_przetworu),
+    -> FOREIGN KEY (id_wykonawcy) REFERENCES postac(idpostaci),
+    -> FOREIGN KEY (id_konsumenta) REFERENCES postac(idpostaci));
+
+
+mysql> desc przetwory;
++---------------+-------------+------+-----+-----------------------------+-------------------+
+| Field         | Type        | Null | Key | Default                     | Extra             |
++---------------+-------------+------+-----+-----------------------------+-------------------+
+| id_przetworu  | int         | NO   | PRI | NULL                        | auto_increment    |
+| rok_produkcji | year        | YES  |     | 1654                        | DEFAULT_GENERATED |
+| id_wykonawcy  | int         | YES  | MUL | NULL                        |                   |
+| zawartosc     | varchar(70) | YES  |     | NULL                        |                   |
+| dodatek       | varchar(35) | YES  |     | _latin1\'papryczka_chilli\' | DEFAULT_GENERATED |
+| id_konsumenta | int         | YES  | MUL | NULL                        |                   |
++---------------+-------------+------+-----+-----------------------------+-------------------+
+ 
+INSERT INTO przetwory (id_wykonawcy, zawartosc, id_konsumenta) VALUES (1, 'bigos z dodatkiem',3);
+  
+ZADANIE 5
+
+
+ INSERT INTO postac (nazwa, rodzaj, data_urodzenia, wiek)  VALUES ('Ernmund','wiking',1666,50), 
+('Floki','wiking',1650,66), 
+('Gudmund','wiking',1680,36), 
+('Hallvard', 'wiking', 1677, 39), 
+('Kisping','wiking', 1670, 46), 
+('Otrygg','wiking', 1651, 67);
+
+
+mysql> CREATE TABLE statek (
+    -> nazwa_statku VARCHAR(50),
+    -> rodzaj_statku ENUM('duzy','maly', 'pasazerski', 'do_walki'),
+    -> data_wodowania SMALLINT,
+    -> max_ladownosc int UNSIGNED,
+    -> PRIMARY KEY (nazwa_statku));
+
+INSERT INTO statek VALUES ('Bizon', 'maly', 1660, 8), ('Kroczacy_Zamaszyscie', 'duzy', 1633, 16);
+
+ ALTER TABLE postac ADD COLUMN funkcja VARCHAR(50);
+
+UPDATE posta SET funkcja = 'kapitan' WHERE nazwa = 'Bjorn';
+
+
+ALTER TABLE postac ADD COLUMN id_statku VARCHAR(50);
+
+ALTER TABLE postac ADD FOREIGN KEY (id_statku) REFERENCES statek (nazwa_statku);
+
+UPDATE postac SET id_statku = 'Bizon' WHERE idpostaci IN (1, 2, 5, 6);
+
+UPDATE postac SET id_statku = 'Kroczacy_Zamaszyscie' WHERE idpostaci IN (4, 7, 8,9);
+
++-----------+----------+---------+----------------+------+---------+----------------------+
+| idpostaci | nazwa    | rodzaj  | data_urodzenia | wiek | funkcja | id_statku            |
++-----------+----------+---------+----------------+------+---------+----------------------+
+|         1 | Bjorn    | wiking  |       19601201 |   64 | kapitan | Bizon                |
+|         2 | Drozd    | ptak    |       20000321 |   24 | NULL    | Bizon                |
+|         3 | Tesciowa | kobieta |       19380812 |   88 | NULL    | NULL                 |
+|         4 | Ernmund  | wiking  |           1666 |   50 | NULL    | Kroczacy_Zamaszyscie |
+|         5 | Floki    | wiking  |           1650 |   66 | NULL    | Bizon                |
+|         6 | Gudmund  | wiking  |           1680 |   36 | NULL    | Bizon                |
+|         7 | Hallvard | wiking  |           1677 |   39 | NULL    | Kroczacy_Zamaszyscie |
+|         8 | Kisping  | wiking  |           1670 |   46 | NULL    | Kroczacy_Zamaszyscie |
+|         9 | Otrygg   | wiking  |           1651 |   67 | NULL    | Kroczacy_Zamaszyscie |
++-----------+----------+---------+----------------+------+---------+----------------------+
+
+ DELETE FROM izba WHERE nazwa_izby = 'spizarnia';
+ DROP TABLE izba;
+
+
+
+
+
+
