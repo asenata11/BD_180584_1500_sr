@@ -1,0 +1,30 @@
+LEKCJA 2
+zadanie1
+DELETE  FROM  postac WHERE rodzaj= 'wiking' AND nazwa != 'Bjorn' ORDER BY wiek DESC LIMIT 2;
+
+aby usunac klucz glowny w postaci musze usunac wszystkie powiazane z nim klucze obce:
+ ALTER TABLE walizka DROP FOREIGN KEY walizka_ibfk_1;
+ALTER TABLE przetwory DROP FOREIGN KEY przetwory_ibfk_1;
+ALTER TABLE przetwory DROP FOREIGN KEY przetwory_ibfk_2;
+ALTER TABLE postac DROP PRIMARY KEY;
+
+zadanie2
+ALTER TABLE postac ADD COLUMN pesel VARCHAR(11);
+dodaje dane do kadzej postaci bo klucz glowny nie moze byc  null:
+ UPDATE postac SET pesel=00000000001 WHERE idpostaci=1;
+ UPDATE postac SET pesel=00000000002 WHERE idpostaci=2;
+ UPDATE postac SET pesel=00000000003 WHERE idpostaci=3;
+ UPDATE postac SET pesel=00000000004 WHERE idpostaci=4;
+ UPDATE postac SET pesel=00000000005 WHERE idpostaci=5;
+ UPDATE postac SET pesel=00000000006 WHERE idpostaci=6;
+ UPDATE postac SET pesel=00000000007 WHERE idpostaci=7;
+ UPDATE postac SET pesel=00000000008 WHERE idpostaci=8;
+ALTER TABLE postac ADD PRIMARY KEY(pesel);
+ALTER TABLE postac MODIFY COLUMN rodzaj ENUM('wiking' , 'ptak' , 'kobieta' , 'syrena');
+INSERT INTO postac (idpostaci, nazwa, rodzaj, data_urodzenia, wiek, pesel)  VALUES (9, 'Gertruda Nieszczera','syrena',980, 204, 00000000009);
+
+zadanie3
+UPDATE postac SET id_statku= 'Bizon' WHERE nazwa LIKE '%a%' AND rodzaj='wiking';
+UPDATE statek SET max_ladownosc = max_ladownosc* 0.7 WHERE data_wodowania BETWEEN 1901 AND 2000;
+SELECT * FROM postac WHERE wiek <= 1000;
+
