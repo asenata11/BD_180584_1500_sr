@@ -1,0 +1,47 @@
+lekcja 2
+ 
+zadanie4
+ALTER TABLE postac MODIFY COLUMN rodzaj ENUM('wiking','ptak','kobieta','syrena','waz');
+INSERT INTO postac (idpostaci, nazwa, rodzaj,data_urodzenia, wiek,pesel)  VALUES (10, 'Loko', 'waz', 432, 200, 0000000010);
+
+ CREATE TABLE marynarz (
+    -> nazwa VARCHAR(50),
+    -> rodzaj ENUM('wiking','kobieta','ptak','syrena','waz'),
+    -> data_urodzenia int,
+    -> wiek int UNSIGNED,
+    -> funkcja VARCHAR(50),
+    -> id_statku VARCHAR(50),
+    -> pesel VARCHAR(11)
+    -> ,id_marynarza int,
+    -> PRIMARY KEY (id_marynarza),
+
+ INSERT INTO marynarz (nazwa, rodzaj, data_urodzenia, wiek, funkcja, id_statku, pesel, id_marynarza) 
+SELECT nazwa, rodzaj, data_urodzenia, wiek, funkcja, id_statku, pesel, idpostaci 
+FROM postac WHERE id_statku IS NOT NULL;
+
+ ALTER TABLE marynarz ADD FOREIGN KEY id_statku REFERENCES postac (pesel);
+
+zadanie5
+
+ UPDATE postac SET id_statku = NULL WHERE id_statku IS NOT NULL;
+ DELETE FROM postac WHERE nazwa='Ernmund';
+
+ DELETE FROM statek;
+SELECT * FROM statek;
+
+aby usunac tabele musze pozbyc sie wszystkich polaczonych do niej kluczy obcych:
+ ALTER TABLE postac DROP FOREIGN KEY postac_ibfk_1;
+ DROP TABLE statek;
+
+mysql> CREATE TABLE zwierz (
+    -> id_zwierza int AUTO_INCREMENT,
+    -> nazwa VARCHAR(50),
+    -> wiek int UNSIGNED,
+    -> PRIMARY KEY (id_zwierza));
+
+mysql> INSERT INTO zwierz (id_zwierza, nazwa, wiek) 
+SELECT idpostaci, nazwa, wiek 
+FROM postac 
+WHERE rodzaj='ptak' OR rodzaj='waz';
+
+
