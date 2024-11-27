@@ -1,0 +1,73 @@
+lekcja 3
+
+zadanie 5 c)
+mysql> SELECT DISTINCT rodzaj FROM zasob WHERE nazwa LIKE 'Ba%' OR nazwa LIKE '%os' GROUP BY rodzaj;
++----------+
+| rodzaj   |
++----------+
+| jedzenie |
++----------+
+
+lekcja 4
+ 
+
+zadanie 1
+
+SELECT AVG(waga) AS srednia_waga_wikingow FROM kreatura WHERE rodzaj='wiking';
+SELECT rodzaj, AVG(waga) AS srednia_waga, COUNT(rodzaj) AS liczbakreatur FROM kreatura WHERE rodzaj IS NOT NULL GROUP BY rodzaj;
++----------+--------------+---------------+
+| rodzaj   | srednia_waga | liczbakreatur |
++----------+--------------+---------------+
+| wiking   |      95.1111 |             9 |
+| ryba     |    1050.5000 |             2 |
+| waz      |       3.0000 |             1 |
+| ptak     |       2.0000 |             2 |
+| wiedzma  |      41.2500 |             4 |
+| malpa    |      32.0000 |             1 |
+| Poczwara |         NULL |             1 |
++----------+--------------+---------------+
+
+SELECT rodzaj, (2024 - AVG(YEAR(dataUr))) AS sredniwiek FROM kreatura WHERE rodzaj IS NOT NULL GROUP BY rodzaj;
++----------+------------+
+| rodzaj   | sredniwiek |
++----------+------------+
+| wiking   |   353.5556 |
+| ryba     |   348.5000 |
+| waz      |   347.0000 |
+| ptak     |   348.5000 |
+| wiedzma  |   532.7500 |
+| malpa    |   352.0000 |
+| Poczwara |   924.0000 |
++----------+------------+
+
+
+zadanie 2
+
+SELECT rodzaj, SUM(waga) AS calkowitawaga FROM zasob WHERE rodzaj IS NOT NULL GROUP BY rodzaj;
++--------------------+---------------+
+| rodzaj             | calkowitawaga |
++--------------------+---------------+
+| jedzenie           |        130.00 |
+| narzedzie          |         13.00 |
+| ubranie            |         33.10 |
+| narzedzie zbrodni  |          6.00 |
+| material budowlany |          0.60 |
+| miejsce wypoczynku |          4.00 |
++--------------------+---------------+
+
+
+SELECT nazwa, (SUM(waga*ilosc))/(SUM(ilosc)) AS sredniawaga FROM zasob GROUP BY nazwa HAVING SUM(waga*ilosc)>10 AND SUM(ilosc)>4;
++---------------+-------------+
+| nazwa         | sredniawaga |
++---------------+-------------+
+| kokos         |    4.000000 |
+| banan         |    1.631579 |
+| figa          |    1.000000 |
+| bataty        |    1.000000 |
+| stanik        |    0.238095 |
+| lisc palmowy  |    0.100000 |
+| skora geparda |   30.000000 |
+| dzida         |    2.000000 |
+| pnacza        |    0.100000 |
+| deski         |    0.500000 |
++---------------+-------------+
