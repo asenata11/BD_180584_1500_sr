@@ -1,0 +1,92 @@
+ZADANIE 2
+3.  SELECT rodzaj, COUNT(DISTINCT nazwa) AS ilosc_roznych_nazwa FROM zasob WHERE ilosc > 1 GROUP BY rodzaj;
++--------------------+---------------------+
+| rodzaj             | ilosc_roznych_nazwa |
++--------------------+---------------------+
+| NULL               |                   2 |
+| jedzenie           |                   5 |
+| material budowlany |                   2 |
+| narzedzie zbrodni  |                   2 |
+| ubranie            |                   4 |
++--------------------+---------------------+
+ ZADANIE 3
+1.    SELECT kreatura.nazwa,  SUM(ekwipunek.ilosc) AS ilosc_noszonych_rzeczy FROM kreatura INNER JOIN ekwipunek ON ekwipunek.idKreatury = kreatura.idKreatury GROUP BY kreatura.nazwa;
++-------------+------------------------+
+| nazwa       | ilosc_noszonych_rzeczy |
++-------------+------------------------+
+| Bjorn       |                     64 |
+| Brutal      |                      4 |
+| Astrid      |                      6 |
+| Khorad      |                      1 |
+| Ibra        |                      2 |
+| Tesciowa    |                      5 |
+| Defgard     |                     55 |
+| Bjolkolur   |                     12 |
+| Drozd       |                      1 |
+| Szczeki     |                      1 |
+| Twoja Stara |                     34 |
++-------------+------------------------+
+
+
+2. 
+mysql> SELECT kreatura.nazwa, zasob.nazwa FROM ekwipunek INNER JOIN kreatura  ON ekwipunek.idKreatury = kreatura.idKreatury INNER JOIN zasob ON zasob.idZasobu = ekwipunek.idZasobu ORDER BY kreatura.nazwa ;
++-------------+-------------------+
+| nazwa       | nazwa             |
++-------------+-------------------+
+| Astrid      | luk               |
+| Astrid      | kokos             |
+| Astrid      | stanik            |
+| Bjolkolur   | pnacza            |
+| Bjolkolur   | deski             |
+| Bjorn       | kokos             |
+| Bjorn       | topor             |
+| Bjorn       | lisc palmowy      |
+| Bjorn       | buty              |
+| Bjorn       | stanik            |
+| Bjorn       | siekiera          |
+| Bjorn       | hamak             |
+| Brutal      | kokos             |
+| Brutal      | siekiera          |
+| Defgard     | skora geparda     |
+| Defgard     | kiel slonia       |
+| Defgard     | siekiera          |
+| Defgard     | pnacza            |
+| Drozd       | stanik            |
+| Ibra        | skora geparda     |
+| Ibra        | dzida             |
+| Khorad      | kiel slonia       |
+| Szczeki     | opos              |
+| Tesciowa    | chatka na drzewie |
+| Tesciowa    | nie wiadomo co    |
+| Tesciowa    | ogien do ziania   |
+| Tesciowa    | miotla            |
+| Twoja Stara | siekiera          |
++-------------+-------------------+
+28 rows in set (0.00 sec)
+
+3.
+SELECT * FROM kreatura LEFT JOIN ekwipunek ON ekwipunek.idKreatury = kreatura.idKreatury WHERE idEkwipunku IS NULL;
++------------+----------------------------+----------+------------+------+--------+-------------+------------+----------+-------+
+| idKreatury | nazwa                      | rodzaj   | dataUr     | waga | udzwig | idEkwipunku | idKreatury | idZasobu | ilosc |
++------------+----------------------------+----------+------------+------+--------+-------------+------------+----------+-------+
+|          4 | Birgun                     | wiking   | 1675-05-11 |   88 |     66 |        NULL |       NULL |     NULL |  NULL |
+|          9 | Nemo                       | ryba     | 1677-10-02 |    1 |      1 |        NULL |       NULL |     NULL |  NULL |
+|         10 | Loko                       | waz      | 1677-10-05 |    3 |      4 |        NULL |       NULL |     NULL |  NULL |
+|         12 | Ara                        | ptak     | 1676-05-05 |    2 |      1 |        NULL |       NULL |     NULL |  NULL |
+|         15 | Tiki                       | malpa    | 1672-08-08 |   32 |     25 |        NULL |       NULL |     NULL |  NULL |
+|         16 | Dziadek                    | wiking   | 1645-01-23 |   54 |    100 |        NULL |       NULL |     NULL |  NULL |
+|         17 | sztuczna szczeka tesciowej | wiedzma  | 1680-08-13 |    2 |      1 |        NULL |       NULL |     NULL |  NULL |
+|         18 | Tesciowa dziadka           | wiedzma  | 1630-04-30 |   78 |     12 |        NULL |       NULL |     NULL |  NULL |
+|         19 | Gollum                     | Poczwara | 1100-10-10 | NULL |   NULL |        NULL |       NULL |     NULL |  NULL |
+|         20 | Trollik                    | NULL     | NULL       | NULL |   NULL |        NULL |       NULL |     NULL |  NULL |
+|         21 | Silacz                     | NULL     | NULL       | NULL |    200 |        NULL |       NULL |     NULL |  NULL |
+|        100 | Babajaga                   | wiedzma  | 1000-01-01 |   20 |   1000 |        NULL |       NULL |     NULL |  NULL |
++------------+----------------------------+----------+------------+------+--------+-------------+------------+----------+-------+
+
+ZADANIE 4
+
+1.
+
+ SELECT kreatura.nazwa, zasob.nazwa FROM ekwipunek INNER JOIN zasob ON zasob.idZasobu = ekwipunek.idZasobu INNER JOIN kreatura ON kreatura.idKreatury = ekwipunek.idKreatury WHERE YEAR(kreatura.dataUr) BETWEEN 1770 AND 1779 GROUP BY kreatura.nazwa, zasob.nazwa ORDER BY nazwa;
+
+
