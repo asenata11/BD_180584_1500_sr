@@ -1,0 +1,85 @@
+LEKCJA 4
+
+zadanie 4
+
+
+2. 
+ mysql> SELECT kreatura.nazwa, kreatura.dataUr AS najmlodszedaty, zasob.rodzaj FROM ekwipunek INNER JOIN kreatura ON kreatura.idKreatury=ekwipunek.idKreatury INNER JOIN zasob ON zasob.idZasobu = ekwipunek.idZasobu WHERE zasob.rodzaj = 'je
+dzenie'  ORDER BY kreatura.dataUr DESC LIMIT 5;
++---------+----------------+----------+
+| nazwa   | najmlodszedaty | rodzaj   |
++---------+----------------+----------+
+| Astrid  | 1677-08-18     | jedzenie |
+| Szczeki | 1674-04-06     | jedzenie |
+| Brutal  | 1672-12-24     | jedzenie |
+| Bjorn   | 1670-04-01     | jedzenie |
++---------+----------------+----------+
+4 rows in set (0.00 sec)
+  
+
+
+3.
+
+mysql> SELECT k1.nazwa AS pierwszanazwa, k2.nazwa AS druganazwa FROM kreatura k1 JOIN kreatura k2 ON k1.idKreatury = k2.idKreatury - 5;
++---------------+----------------------------+
+| pierwszanazwa | druganazwa                 |
++---------------+----------------------------+
+| Bjorn         | Astrid                     |
+| Brutal        | Ibra                       |
+| Khorad        | Bjolkolur                  |
+| Birgun        | Nemo                       |
+| Defgard       | Loko                       |
+| Astrid        | Drozd                      |
+| Ibra          | Ara                        |
+| Bjolkolur     | Szczeki                    |
+| Nemo          | Tesciowa                   |
+| Loko          | Tiki                       |
+| Drozd         | Dziadek                    |
+| Ara           | sztuczna szczeka tesciowej |
+| Szczeki       | Tesciowa dziadka           |
+| Tesciowa      | Gollum                     |
+| Tiki          | Trollik                    |
+| Dziadek       | Silacz                     |
++---------------+----------------------------+
+16 rows in set (0.00 sec)
+
+
+zadanie 5
+
+1.
+
+mysql> SELECT kreatura.rodzaj, AVG(zasob.waga) AS srednia_waga_jaka_niesie FROM kreatura JOIN ekwipunek ON kreatura.idKreatury=ekwipunek.idKreatury JOIN zasob ON zasob.idZasobu = ekwipunek.idZasobu WHERE kreatura.rodzaj NOT IN ('malpa',
+'waz') AND ekwipunek.ilosc < 30 GROUP BY kreatura.rodzaj;
++---------+--------------------------+
+| rodzaj  | srednia_waga_jaka_niesie |
++---------+--------------------------+
+| wiking  |                 6.473684 |
+| ryba    |                12.000000 |
+| ptak    |                 0.200000 |
+| wiedzma |                 2.500000 |
++---------+--------------------------+
+4 rows in set (0.00 sec)
+
+
+2. 
+
+mysql> SELECT (SELECT k1.rodzaj FROM kreatura k1 WHERE k1.rodzaj = k.rodzaj ORDER BY k1.dataUr DESC LIMIT 1) AS najmlodszy_rodzaj, 
+(SELECT k1.nazwa FROM kreatura k1 WHERE k1.rodzaj = k.rodzaj ORDER BY k1.dataUr DESC LIMIT 1) AS najmlodsza_nazwa, 
+(SELECT k1.dataUr FROM kreatura k1 WHERE k1.rodzaj = k.rodzaj ORDER BY k1.dataUr DESC LIMIT 1) AS najmlodsza_dataUr, 
+(SELECT k2.rodzaj FROM kreatura k2 WHERE k2.rodzaj = k.rodzaj ORDER BY k2.dataUr LIMIT 1) AS najstarszy_rodzaj, 
+(SELECT k2.nazwa FROM kreatura k2 WHERE k2.rodzaj = k.rodzaj ORDER BY k2.dataUr LIMIT 1) AS najstarsza_nazwa, 
+(SELECT k2.dataUr FROM kreatura k2 WHERE k2.rodzaj = k.rodzaj ORDER BY k2.dataUr LIMIT 1) AS najstarsza_dataUr 
+FROM kreatura k GROUP BY k.rodzaj;
++-------------------+----------------------------+-------------------+-------------------+------------------+-------------------+
+| najmlodszy_rodzaj | najmlodsza_nazwa           | najmlodsza_dataUr | najstarszy_rodzaj | najstarsza_nazwa | najstarsza_dataUr |
++-------------------+----------------------------+-------------------+-------------------+------------------+-------------------+
+| wiking            | Astrid                     | 1677-08-18        | wiking            | Dziadek          | 1645-01-23        |
+| ryba              | Nemo                       | 1677-10-02        | ryba              | Szczeki          | 1674-04-06        |
+| waz               | Loko                       | 1677-10-05        | waz               | Loko             | 1677-10-05        |
+| ptak              | Ara                        | 1676-05-05        | ptak              | Drozd            | 1675-07-07        |
+| wiedzma           | sztuczna szczeka tesciowej | 1680-08-13        | wiedzma           | Babajaga         | 1000-01-01        |
+| malpa             | Tiki                       | 1672-08-08        | malpa             | Tiki             | 1672-08-08        |
+| Poczwara          | Gollum                     | 1100-10-10        | Poczwara          | Gollum           | 1100-10-10        |
+| NULL              | NULL                       | NULL              | NULL              | NULL             | NULL              |
++-------------------+----------------------------+-------------------+-------------------+------------------+-------------------+
+8 rows in set (0.29 sec)
