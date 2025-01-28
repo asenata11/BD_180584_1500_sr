@@ -1,0 +1,20 @@
+LEKCJA 5
+
+ZADANIE 1
+2.
+mysql> SELECT kreatura.nazwa
+    -> FROM kreatura
+    -> LEFT JOIN uczestnicy ON uczestnicy.id_uczestnika = kreatura.idKreatury
+    -> WHERE uczestnicy.id_uczestnika IS NULL;
+ZADANIE 2
+1.
+
+ SELECT wyprawa.nazwa AS wyprawa_nazwa, 
+COUNT(kreatura1.nazwa) AS liczba_uczestnikow, 
+GROUP_CONCAT(kreatura1.nazwa SEPARATOR ', ') AS lista_kreatur 
+ FROM uczestnicy 
+JOIN wyprawa 
+ ON wyprawa.id_wyprawy = uczestnicy.id_wyprawy 
+JOIN kreatura1 
+ ON kreatura1.idKreatury = uczestnicy.id_uczestnika 
+GROUP BY  wyprawa.nazwa;
